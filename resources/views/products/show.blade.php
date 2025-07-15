@@ -24,7 +24,7 @@
             </div>
             <div>
                 <span class="block text-gray-600 font-semibold">Price:</span>
-                <span class="block text-lg text-gray-900">${{ number_format($product->price, 2) }}</span>
+                <span class="block text-lg text-gray-900">{{ number_format($product->price, 2) }}</span>
             </div>
             <div>
                 <span class="block text-gray-600 font-semibold">Description:</span>

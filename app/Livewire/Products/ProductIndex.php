@@ -34,7 +34,7 @@ class ProductIndex extends Component
         'quantity' => 'required|integer|min:0',
         'price' => 'required|numeric|min:0',
         'description' => 'nullable|string',
-        'attachment' => 'nullable|image|max:1024', // 1MB max
+        'attachment' => 'nullable|image|max:1024',
     ];
 
     public function updatedSearch()

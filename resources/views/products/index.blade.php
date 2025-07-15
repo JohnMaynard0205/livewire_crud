@@ -48,7 +48,7 @@
                                 <td class="px-4 py-2 text-sm text-gray-900">{{ $product->code }}</td>
                                 <td class="px-4 py-2 text-sm text-gray-900">{{ $product->name }}</td>
                                 <td class="px-4 py-2 text-sm text-gray-900">{{ $product->quantity }}</td>
-                                <td class="px-4 py-2 text-sm text-gray-900">${{ number_format($product->price, 2) }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-900">{{ number_format($product->price, 2) }}</td>
                                 <td class="px-4 py-2 text-sm text-gray-900">
                                     <div class="flex flex-wrap gap-2">
                                         <a href="{{ route('products.show', $product->id) }}" class="inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200 text-xs font-medium transition-colors duration-200">
