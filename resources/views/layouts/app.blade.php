@@ -4,28 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Simple Laravel 11 CRUD Application Tutorial</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrapicons@1.11.1/font/bootstrap-icons.css">
+    <title>Laravel CRUD with Livewire</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Livewire Styles -->
+    @livewireStyles
 </head>
-<body>
-    <div class="container">
-        <h3 class="mt-3">Simple Laravel 11 CRUD Application Tutorial</h3>
-
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <h1 class="text-2xl font-bold text-gray-900">Laravel CRUD</h1>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="py-6">
         @yield('content')
-
-        <div class="row justify-content-center text-center mt-3">
-            <div class="col-md-12">
-                <p>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-white shadow-lg mt-auto">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-gray-600">
                     Return to Website:
-                    <a href="https://www.usjr.edu.ph/">
-                        <strong>University of San Jose - Recoletos</strong>
+                    <a href="https://www.usjr.edu.ph/" class="text-blue-600 hover:text-blue-800 font-semibold">
+                        University of San Jose - Recoletos
                     </a>
                 </p>
             </div>
         </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </footer>
+    <!-- Livewire Scripts -->
+    @livewireScripts
 </body>
 </html>
