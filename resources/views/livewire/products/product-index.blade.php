@@ -5,12 +5,21 @@
             <h1 class="text-3xl font-bold text-gray-900">Products</h1>
             <p class="text-gray-600 mt-1">Manage your product inventory</p>
         </div>
-        <button wire:click="create" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            Add Product
-        </button>
+        <div class="flex items-center gap-4">
+            <span class="text-gray-700">Welcome, <strong>{{ auth()->user()->name }}</strong>!</span>
+            <form method="POST" action="{{ route('logout') }}" class="inline">
+                @csrf
+                <button type="submit" class="text-red-600 hover:text-red-800 font-medium px-3 py-1 rounded transition-colors duration-200 border border-red-200 bg-red-50 hover:bg-red-100">
+                    Logout
+                </button>
+            </form>
+            <a href="{{ route('products.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Add Product
+            </a>
+        </div>
     </div>
 
     <!-- Search and Filters -->
@@ -106,7 +115,7 @@
                                 {{ $product->quantity }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ number_format($product->price, 2) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($product->price, 2) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             @if($product->attachment)
                                 <img src="{{ Storage::url($product->attachment) }}" alt="Product attachment" class="w-10 h-10 object-cover rounded">
@@ -116,12 +125,18 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center gap-2">
-                                <button wire:click="edit({{ $product->id }})" class="text-blue-600 hover:text-blue-900">
+                                <a href="{{ route('products.show', $product->id) }}" class="text-yellow-600 hover:text-yellow-900" title="Show Details">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </a>
+                                <a href="{{ route('products.edit', $product->id) }}" class="text-blue-600 hover:text-blue-900" title="Edit">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                     </svg>
-                                </button>
-                                <button wire:click="delete({{ $product->id }})" class="text-red-600 hover:text-red-900">
+                                </a>
+                                <button wire:click="delete({{ $product->id }})" class="text-red-600 hover:text-red-900" title="Delete">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                     </svg>
@@ -144,74 +159,6 @@
     <div class="mt-6">
         {{ $products->links() }}
     </div>
-
-    <!-- Create/Edit Modal -->
-    @if($showModal)
-        <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" wire:click="closeModal">
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" wire:click.stop>
-                <div class="mt-3">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">
-                        {{ $editingProduct ? 'Edit Product' : 'Create Product' }}
-                    </h3>
-                    
-                    <form wire:submit.prevent="save">
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Code</label>
-                                <input wire:model="code" type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                @error('code') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Name</label>
-                                <input wire:model="name" type="text" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Quantity</label>
-                                <input wire:model="quantity" type="number" min="0" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                @error('quantity') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Price</label>
-                                <input wire:model="price" type="number" step="0.01" min="0" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                @error('price') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Description</label>
-                                <textarea wire:model="description" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                                @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Attachment</label>
-                                <input wire:model="attachment" type="file" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                                @error('attachment') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                            </div>
-
-                            @if($attachment)
-                                <div>
-                                    <img src="{{ $attachment->temporaryUrl() }}" alt="Preview" class="w-20 h-20 object-cover rounded">
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="flex justify-end gap-3 mt-6">
-                            <button type="button" wire:click="closeModal" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200">
-                                Cancel
-                            </button>
-                            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
-                                {{ $editingProduct ? 'Update' : 'Create' }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    @endif
 
     <!-- Delete Confirmation Modal -->
     @if($showDeleteModal)

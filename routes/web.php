@@ -1,6 +1,5 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
 
 Route::middleware('guest')->group(function () {
@@ -12,7 +11,26 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::resource('products', ProductController::class);
+    
+    // Livewire Products CRUD - Main route
+    Route::get('/products', function () {
+        return view('products.livewire-index');
+    })->name('products.index');
+    
+    // Livewire Product Create - Separate page
+    Route::get('/products/create', function () {
+        return view('products.livewire-create');
+    })->name('products.create');
+    
+    // Livewire Product Show - Separate page
+    Route::get('/products/{id}', function ($id) {
+        return view('products.livewire-show', ['productId' => $id]);
+    })->name('products.show');
+    
+    // Livewire Product Edit - Separate page
+    Route::get('/products/{id}/edit', function ($id) {
+        return view('products.livewire-edit', ['productId' => $id]);
+    })->name('products.edit');
 });
 
 Route::get('/', function () {
